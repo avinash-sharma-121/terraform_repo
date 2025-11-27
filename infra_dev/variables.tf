@@ -28,3 +28,13 @@ variable "enable_ha" {
     default=true
     description = "Enable high avaiblity"
 }
+
+variable "instance_type" {
+    type=string
+    default="t2.medium"
+}
+
+variable "ami_id"{
+    type = string
+    default = "ami-0ecb62995f68bb549"
+}

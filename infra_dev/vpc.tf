@@ -37,3 +37,16 @@ module "tgw" {
     vpc_id=module.infra.vpc_id
     private_subnet_ids=module.infra.private_subnet_ids
 }
+
+# Creating ec2
+
+module "ec2"{
+    source = "../modules/ec2"
+    vpc_id=module.infra.vpc_id
+    env=var.env
+    public_subnet_ids="${module.infra.public_subnet_ids[0]}"
+    private_subnet_ids="${module.infra.private_subnet_ids[0]}"
+    region=var.region
+    instance_type=var.instance_type
+    ami_id=var.ami_id
+}
