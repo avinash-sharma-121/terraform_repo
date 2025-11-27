@@ -9,3 +9,7 @@ output "public_subnet_ids" {
 output "private_subnet_ids" {
     value = aws_subnet.private_subnet[*].id
 }
+
+output "av_zones" {
+    value = data.aws_availability_zones.available_zone
+}
