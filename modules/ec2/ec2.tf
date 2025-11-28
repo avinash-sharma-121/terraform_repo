@@ -10,6 +10,8 @@ resource "aws_instance" "public_ec2" {
   associate_public_ip_address = true
 
   key_name = aws_key_pair.mykey.key_name
+
+  user_data = file("${path.module}/../../scripts/ansible.sh")
   
   tags = {
     Name = "${var.env}-public-ec2-${count.index+1}"
