@@ -11,6 +11,10 @@ resource "aws_vpc" "main_vpc"{
 
 data "aws_availability_zones" "available_zone"{
     state = "available"
+    filter {
+	name = "opt-in-status"
+	values = ["opt-in-not-required"]
+    }
 }
 
 resource "aws_subnet" "public_subnet"{
