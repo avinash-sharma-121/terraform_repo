@@ -1,0 +1,7 @@
+#Please create the ssh key and keep in this directory.
+
+command :- ssh-keygen -t rsa -b 4096
+
+# It will generate two file id_rsa and id_rsa.pub in ~/.ssh directory.
+
+# just copy both the key in modules/ec2/keys directory and apply terraform.
