@@ -42,5 +42,10 @@ variable "ami_id"{
 #Running bash script for ec2
 variable "base_script"{
     type=string
-    default= "terraform"
+    default= "ansible"
+}
+
+variable private_ec2_count {
+    type = number
+    default= 5
 }

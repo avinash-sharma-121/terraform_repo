@@ -11,7 +11,7 @@ resource "aws_instance" "public_ec2" {
 
   key_name = aws_key_pair.mykey.key_name
 
-  user_data = file("${path.module}/../../scripts/ansible.sh")
+  user_data = file("${path.module}/../../scripts/${var.base_script}.sh")
   
   tags = {
     Name = "${var.env}-public-ec2-${count.index+1}"
@@ -21,7 +21,7 @@ resource "aws_instance" "public_ec2" {
 # Private EC2 (private server)
 
 resource "aws_instance" "private_ec2" {
-  count = 4
+  count = var.private_ec2_count
   ami           = var.ami_id
   instance_type = var.instance_type
 
@@ -33,7 +33,13 @@ resource "aws_instance" "private_ec2" {
 
   key_name = aws_key_pair.mykey.key_name
 
+  user_data = file("${path.module}/../../scripts/${var.base_script}.sh")
+
   tags = {
     Name = "${var.env}-private-ec2-${count.index+1}"
   }
+}
+
+output "user_data_path"{
+  value = "${path.module}/../../scripts/${var.base_script}.sh"
 }

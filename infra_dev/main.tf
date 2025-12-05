@@ -30,6 +30,11 @@ output "available_zone" {
     value=module.infra.av_zones.names
 }
 
+output "user_data_path"{
+    value=module.ec2.user_data_path
+}
+
+/*
 module "tgw" {
     source = "../modules/transite-gatway"
     env = var.env
@@ -37,10 +42,11 @@ module "tgw" {
     vpc_id=module.infra.vpc_id
     private_subnet_ids=module.infra.private_subnet_ids
 }
+*/
 
 # Creating ec2
 
-module "ec2"{
+module "ec2" {
     source = "../modules/ec2"
     vpc_id=module.infra.vpc_id
     env=var.env
@@ -49,4 +55,5 @@ module "ec2"{
     region=var.region
     instance_type=var.instance_type
     ami_id=var.ami_id
+    base_script=var.base_script
 }

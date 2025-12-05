@@ -30,3 +30,13 @@ variable "ami_id" {
 variable "env"{
     type = string
 }
+
+#Running bash script for ec2
+variable "base_script"{
+    type=string
+    #default= "basic"
+}
+
+variable private_ec2_count {
+    type=number
+}
