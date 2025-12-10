@@ -42,7 +42,7 @@ variable "ami_id"{
 #Running bash script for ec2
 variable "base_script"{
     type=string
-    default= "terraform"
+    default= "k8s"
 }
 
 variable private_ec2_count {
