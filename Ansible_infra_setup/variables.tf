@@ -31,7 +31,7 @@ variable "enable_ha" {
 
 variable "instance_type" {
     type=string
-    default="t2.medium"
+    default="t2.micro"
 }
 
 variable "ami_id"{
@@ -47,5 +47,14 @@ variable "base_script"{
 
 variable private_ec2_count {
     type = number
-    default= 5
+    default= 2
+}
+variable public_ec2_count {
+    type = number
+    default= 2
+}
+
+variable root_volume_size{
+    type=number
+    default=20
 }

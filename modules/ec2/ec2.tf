@@ -1,7 +1,7 @@
 # Public EC2 (Bastion Server in Public subnet)
 
 resource "aws_instance" "public_ec2" {
-  count=1
+  count=var.public_ec2_count
   ami           = var.ami_id
   instance_type = var.instance_type
 
@@ -12,6 +12,13 @@ resource "aws_instance" "public_ec2" {
   key_name = aws_key_pair.mykey.key_name
 
   user_data = file("${path.module}/../../scripts/${var.base_script}.sh")
+
+  root_block_device {
+    #device_name="root-voulme-${var.env}-public-ec2"
+    volume_size=var.root_volume_size
+    volume_type="gp3"
+    delete_on_termination=true
+  }
   
   tags = {
     Name = "${var.env}-public-ec2-${count.index+1}"
@@ -35,6 +42,13 @@ resource "aws_instance" "private_ec2" {
 
   user_data = file("${path.module}/../../scripts/${var.base_script}.sh")
 
+  root_block_device {
+    #device_name="root-voulme-${var.env}-public-ec2"
+    volume_size=var.root_volume_size
+    volume_type="gp3"
+    delete_on_termination=true
+  }
+  
   tags = {
     Name = "${var.env}-private-ec2-${count.index+1}"
   }

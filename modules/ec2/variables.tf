@@ -40,3 +40,11 @@ variable "base_script"{
 variable private_ec2_count {
     type=number
 }
+
+variable public_ec2_count {
+    type=number
+}
+
+variable root_volume_size{
+    type=number
+}

@@ -56,4 +56,7 @@ module "ec2" {
     ami_id=var.ami_id
     base_script=var.base_script
     private_ec2_count=var.private_ec2_count
+       # private_ec2_count=var.private_ec2_count
+    public_ec2_count=var.public_ec2_count
+    root_volume_size=var.root_volume_size
 }
