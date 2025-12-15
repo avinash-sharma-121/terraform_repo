@@ -77,3 +77,26 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 #ip-10-1-3-91    39m          1%       543Mi           14%        
 #ubuntu@ip-10-1-1-66:~$ 
 #ubuntu@ip-10-1-1-66:~$ 
+
+
+#helm installation
+
+sudo apt-get install curl gpg apt-transport-https --yes
+curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+#kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+#   27  kubectl get ns
+#   28  kubectl get all -n ingress-nginx
+#   29  kubectl get ing  -n chat-app
+#   30  cat ingress.yml 
+
+#Ingress Setup (Using Nginx Ingress Controller)
+#We can use helm chart for installing ingress-nginx controller
+helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace   
+kubectl get all -n ingress-nginx
+kubectl get ingressclass
+#We can delete the validating webhook configuration if we are facing any issue while creating ingress resources.
+#kubectl delete validatingwebhookconfiguration ingress-nginx-admission  
+kubectl delete validatingwebhookconfiguration ingress-nginx-admission
