@@ -29,10 +29,11 @@ output "available_zone" {
     value=module.infra.av_zones.names
 }
 
+/*
 output "user_data_path"{
     value=module.ec2.user_data_path
 }
-
+*/
 /*
 module "tgw" {
     source = "../modules/transite-gatway"
@@ -43,6 +44,7 @@ module "tgw" {
 }
 */
 
+/*
 # Creating ec2
 
 module "ec2" {
@@ -59,4 +61,5 @@ module "ec2" {
     public_ec2_count=var.public_ec2_count
     root_volume_size=var.root_volume_size
 }
+*/
 
