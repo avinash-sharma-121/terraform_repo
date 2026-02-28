@@ -1,6 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
 
 resource "aws_iot_thing_group" "motors_via_tf"{
     name = "motors_via_tf"
