@@ -31,7 +31,7 @@ resource "aws_iot_thing_group_membership" "things_things_group_membership" {
 }
 
 resource "aws_iot_policy" "pubsub" {
-  name   = var.iot_policy_name
+  name   = "${var.iot_policy_name}"
   policy = var.iot_policy_json
 }
 
@@ -57,7 +57,7 @@ resource "aws_iot_thing_principal_attachment" "att" {
 
 
 resource "awscc_iot_topic_rule" "rule" {
-  rule_name          = var.iot_topic_rule_name
+  rule_name          = "${var.iot_topic_rule_name}"
   topic_rule_payload = var.iot_topic_rule_payload
 }
 
