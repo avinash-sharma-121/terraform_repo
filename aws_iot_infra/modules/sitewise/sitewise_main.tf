@@ -1,7 +1,7 @@
 
 # Example of an IoT SiteWise Asset Model for a Wind Turbine
-resource "awscc_iotsitewise_asset_model" "LHM-Rack_tf" {
-  asset_model_name        = "LHM-Rack_tf"
+resource "awscc_iotsitewise_asset_model" "asset_model_name" {
+  asset_model_name        = "${var.asset_model_name}"
   asset_model_description = "Asset model for LHM-Rack"
 
   asset_model_properties = [
@@ -53,19 +53,24 @@ resource "awscc_iotsitewise_asset_model" "LHM-Rack_tf" {
   tags = [{
     key   = "Modified By"
     value = "AWSCC"
+    environment = "${var.environment}"
   }]
 }
 
+locals {
+  devices = toset(var.device_names)
+}
+
 # Then create the asset using the model
-resource "awscc_iotsitewise_asset" "child-LHM-Rack_tf" {
-  count = 5
-  asset_name        = "LHM-Rack-${count.index+1}"
-  asset_model_id    = awscc_iotsitewise_asset_model.LHM-Rack_tf.asset_model_id
+resource "awscc_iotsitewise_asset" "child_iotsitewise_asset" {
+  for_each = local.devices
+  asset_name = each.key
+  asset_model_id    = awscc_iotsitewise_asset_model.asset_model_name.asset_model_id
   asset_description = "LHM-Rack IoT SiteWise asset"
 
   asset_properties = [{
     name               = "Temperature"
-    alias = "robots/LHM-Rack/LHM-Rack-${count.index+1}"
+    alias = "robots/LHM-Rack/${each.key}"
     logical_id         = "temperature_property"
     notification_state = "DISABLED"
   }]
@@ -74,5 +79,6 @@ resource "awscc_iotsitewise_asset" "child-LHM-Rack_tf" {
   tags = [{
     key   = "Modified By"
     value = "AWSCC"
+    environment = "${var.environment}"
   }]
 }

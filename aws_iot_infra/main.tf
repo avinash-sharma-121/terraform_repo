@@ -1,6 +1,6 @@
 # This Terraform configuration sets up an AWS IoT Core infrastructure for a project named "LHM_Rack". It includes the creation of an IoT thing group, IoT devices, an IoT policy, and an IoT topic rule that sends data to AWS SiteWise.
 
-module "lhm_rack" {
+module "lhm_rack_iot_core" {
   source = "./modules/iot_core"
   iot_thing_group   = "LHM_Rack_testing"
   environment = "Dev"
@@ -19,6 +19,15 @@ module "lhm_rack" {
   iot_topic_rule_payload = local.topic_rule_payload
 }
 
+module "lhm_rack_sitewise" {
+  source = "./modules/sitewise"
+  asset_model_name = "LHM-Rack-Model"
+  environment = "Dev"
+  device_names = [
+    "LHM-Rack-1-test",
+    "LHM-Rack-2-test"
+  ]
+}
 
 locals {
   topic_rule_payload = {
@@ -55,6 +64,6 @@ locals {
 }
 
 output "certificate_pem" {
-  value     = module.lhm_rack.certificate_pem
+  value     = module.lhm_rack_iot_core.certificate_pem
   sensitive = true
 }
