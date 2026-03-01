@@ -1,8 +1,8 @@
 
 # Example of an IoT SiteWise Asset Model for a Wind Turbine
-resource "awscc_iotsitewise_asset_model" "moters_via_tf" {
-  asset_model_name        = "motors_via_tf"
-  asset_model_description = "Asset model for wind turbines"
+resource "awscc_iotsitewise_asset_model" "LHM-Rack_tf" {
+  asset_model_name        = "LHM-Rack_tf"
+  asset_model_description = "Asset model for LHM-Rack"
 
   asset_model_properties = [
     # Measurement Properties    
@@ -57,15 +57,15 @@ resource "awscc_iotsitewise_asset_model" "moters_via_tf" {
 }
 
 # Then create the asset using the model
-resource "awscc_iotsitewise_asset" "motor_via_tf" {
-  count = 4
-  asset_name        = "motor${count.index+1}_via_tf"
-  asset_model_id    = awscc_iotsitewise_asset_model.moters_via_tf.asset_model_id
-  asset_description = "An example IoT SiteWise asset"
+resource "awscc_iotsitewise_asset" "child-LHM-Rack_tf" {
+  count = 5
+  asset_name        = "LHM-Rack-${count.index+1}"
+  asset_model_id    = awscc_iotsitewise_asset_model.LHM-Rack_tf.asset_model_id
+  asset_description = "LHM-Rack IoT SiteWise asset"
 
   asset_properties = [{
     name               = "Temperature"
-    alias = "/motors/motor${count.index+1}/temperature"
+    alias = "robots/LHM-Rack/LHM-Rack-${count.index+1}"
     logical_id         = "temperature_property"
     notification_state = "DISABLED"
   }]
