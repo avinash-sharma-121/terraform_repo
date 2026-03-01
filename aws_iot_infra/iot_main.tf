@@ -1,11 +1,10 @@
-resource "aws_iot_thing_group" "motors_via_tf"{
-    name = "motors_via_tf"
+resource "aws_iot_thing_group" "LHM-Rack_tf"{
+    name = "LHM-Rack_tf"
 
     properties {
     attribute_payload {
       attributes = {
-        One = "11111"
-        Two = "TwoTwo"
+        env = "Dev"  
       }
     }
     description = "This is my thing group"
@@ -17,40 +16,72 @@ resource "aws_iot_thing_group" "motors_via_tf"{
 }
 
 # Create a thing group with a parent group
-resource "aws_iot_thing" "child_motors_via_tf" {
-    count = 4
-    name = "motor${count.index+1}_via_tf"
+resource "aws_iot_thing" "child_LHM-Rack_tf" {
+    count = 5
+    name = "LHM-Rack-${count.index+1}"
    
 }
 
 
-resource "aws_iot_thing_group_membership" "child_motors_via_tf_membership" {
-    count = 4
-    thing_name = aws_iot_thing.child_motors_via_tf[count.index].name
-    thing_group_name = aws_iot_thing_group.motors_via_tf.name
+resource "aws_iot_thing_group_membership" "child_LHM-Rack_tf_membership" {
+    count = 5
+    thing_name = aws_iot_thing.child_LHM-Rack_tf[count.index].name
+    thing_group_name = aws_iot_thing_group.LHM-Rack_tf.name
 }
 
-/*
+
 resource "aws_iot_policy" "pubsub" {
   name = "PubSubToAnyTopic"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
   policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "iot:*",
-        ]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-    ]
-  })
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Publish",
+        "iot:Receive",
+        "iot:PublishRetain"
+      ],
+      "Resource": [
+        "arn:aws:iot:us-west-2:385163247062:topic/sdk/test/java",
+        "arn:aws:iot:us-west-2:385163247062:topic/sdk/test/python",
+        "arn:aws:iot:us-west-2:385163247062:topic/sdk/test/python/*",
+        "arn:aws:iot:us-west-2:385163247062:topic/sdk/test/js",
+        "arn:aws:iot:us-west-2:385163247062:topic/robots/LHM-Rack",
+        "arn:aws:iot:us-west-2:385163247062:topic/robots/LHM-Rack/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iot:Subscribe",
+      "Resource": [
+        "arn:aws:iot:us-west-2:385163247062:topicfilter/sdk/test/java",
+        "arn:aws:iot:us-west-2:385163247062:topicfilter/sdk/test/python",
+        "arn:aws:iot:us-west-2:385163247062:topicfilter/sdk/test/python/*",
+        "arn:aws:iot:us-west-2:385163247062:topicfilter/sdk/test/js",
+        "arn:aws:iot:us-west-2:385163247062:topicfilter/robots/LHM-Rack",
+        "arn:aws:iot:us-west-2:385163247062:topicfilter/robots/LHM-Rack/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iot:Connect",
+      "Resource": [
+        "arn:aws:iot:us-west-2:385163247062:client/sdk-java",
+        "arn:aws:iot:us-west-2:385163247062:client/basicPubSub",
+        "arn:aws:iot:us-west-2:385163247062:client/*",
+        "arn:aws:iot:us-west-2:385163247062:client/sdk-nodejs-*"
+      ]
+    }
+  ]
+})
 }
-*/
 
+
+/*
 data "aws_iam_policy_document" "pubsub" {
   statement {
     effect    = "Allow"
@@ -63,12 +94,28 @@ resource "aws_iot_policy" "pubsub" {
   name   = "PubSubToAnyTopic"
   policy = data.aws_iam_policy_document.pubsub.json
 }
+*/
 
-
+/*
 resource "aws_iot_certificate" "cert" {
   active = true
 }
 
+*/
+
+resource "aws_iot_certificate" "cert" {
+  active = true
+  csr    = file("${path.module}/csr.pem")
+  lifecycle {
+    create_before_destroy = true
+  }
+  
+}
+
+output "certificate_pem" {
+  value = aws_iot_certificate.cert.certificate_pem
+  sensitive = true
+}
 
 resource "aws_iot_policy_attachment" "att" {
   policy = aws_iot_policy.pubsub.name
@@ -76,9 +123,9 @@ resource "aws_iot_policy_attachment" "att" {
 }
 
 resource "aws_iot_thing_principal_attachment" "att" {
-  count = 4
+  count = 5
   principal = aws_iot_certificate.cert.arn
-  thing     = aws_iot_thing.child_motors_via_tf[count.index].name
+  thing     = aws_iot_thing.child_LHM-Rack_tf[count.index].name
 }
 
 

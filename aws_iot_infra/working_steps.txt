@@ -1,0 +1,10 @@
+-> for new setup
+
+first generate the certificate
+
+openssl req -new -newkey rsa:2048 -nodes -keyout private.key -out csr.pem
+
+terraform output -raw certificate_pem > certificate.pem.crt
+
+Using above command we sould grep the certificate for auth
+
