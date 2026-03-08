@@ -2,66 +2,27 @@
 
 module "lhm_rack_iot_core" {
   source = "./modules/iot_core"
-  iot_thing_group   = "LHM_Rack_testing"
-  environment = "Dev"
-  device_names = [
-    "LHM-Rack-1-test",
-    "LHM-Rack-2-test"
-  ]
-  csr_file_path = "${path.root}/cert/csr.pem"
+  iot_thing_group   = var.iot_thing_group
+  environment = var.environment
+  device_names = var.device_names
+  csr_file_path = local.csr_file_path
   
   # Variables for IoT policy
-  iot_policy_name = "LHM-Rack-Policy-update"
-  iot_policy_json = file("${path.root}/iot_policy.json")
+  iot_policy_name = var.iot_policy_name
+  iot_policy_json = local.iot_policy_json
   
   # Variables for IoT topic rule
-  iot_topic_rule_name = "lhm_rack_topic_rule"
+  iot_topic_rule_name = var.iot_topic_rule_name
   iot_topic_rule_payload = local.topic_rule_payload
 }
 
 module "lhm_rack_sitewise" {
   source = "./modules/sitewise"
-  asset_model_name = "LHM-Rack-Model"
-  environment = "Dev"
-  device_names = [
-    "LHM-Rack-1-test",
-    "LHM-Rack-2-test"
-  ]
+  asset_model_name = var.asset_model_name
+  environment = var.environment
+  device_names = var.device_names
 }
 
-locals {
-  topic_rule_payload = {
-    sql                 = "SELECT * FROM 'robots/LHM-Rack/+'"
-    aws_iot_sql_version = "2015-10-08"
-    rule_disabled       = false
-
-    actions = [
-      {
-        iot_site_wise = {
-          role_arn = "arn:aws:iam::385163247062:role/CdkStack-sitewiseiotruleingestfromiotserviceroleBFC-oYbi9gSqjadp"
-
-          put_asset_property_value_entries = [
-            {
-              property_alias = "robots/LHM-Rack/$${topic(3)}"
-
-              property_values = [
-                {
-                  value = {
-                    double_value = "$${temperature_c}"
-                  }
-
-                  timestamp = {
-                    time_in_seconds = "$${timestamp}"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      }
-    ]
-  }
-}
 
 output "certificate_pem" {
   value     = module.lhm_rack_iot_core.certificate_pem
